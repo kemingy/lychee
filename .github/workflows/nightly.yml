@@ -12,13 +12,15 @@ on:
 jobs:
   trigger:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v3
       - if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          gh release create ${{ github.event.inputs.tag_name }} --title ${{ github.event.inputs.tag_name }}
+          gh release create ${{ github.event.inputs.tag_name }} --title ${{ github.event.inputs.tag_name }} --generate-notes --prerelease
 
       - if: ${{ github.event_name == 'schedule' }}
         run: |
