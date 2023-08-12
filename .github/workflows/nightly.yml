@@ -27,6 +27,6 @@ jobs:
       - if: ${{ github.event_name == 'schedule' }}
         run: |
           if [[ $(git diff nightly --name-only -B -M -C) ]]; then
-            gh release delete nightly --yes || true
+            gh release delete nightly --yes --cleanup-tag || true
             gh release create nightly --title nightly --generate-notes --prerelease
           fi
