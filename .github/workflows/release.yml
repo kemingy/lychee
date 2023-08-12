@@ -76,15 +76,21 @@ jobs:
           chmod +x lychee
           tar -c lychee | gzip > lychee.tar.gz
 
-      - name: Upload binary
-        uses: actions/upload-release-asset@v1
+      - name: Upload assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          asset_name: lychee-${{needs.prepare.outputs.tag_name}}-${{ matrix.target }}.tar.gz
-          asset_path: target/${{ matrix.target }}/release/lychee.tar.gz
-          upload_url: ${{needs.prepare.outputs.upload_url}}
-          asset_content_type: application/gzip
+        run: |
+          gh release upload ${{needs.prepare.outputs.tag_name}} target/${{ matrix.target }}/release/lychee.tar.gz#lychee-${{needs.prepare.outputs.tag_name}}-${{ matrix.target }}.tar.gz --clobber
+
+      # - name: Upload binary
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     asset_name: lychee-${{needs.prepare.outputs.tag_name}}-${{ matrix.target }}.tar.gz
+      #     asset_path: target/${{ matrix.target }}/release/lychee.tar.gz
+      #     upload_url: ${{needs.prepare.outputs.upload_url}}
+      #     asset_content_type: application/gzip
 
   macos:
     runs-on: macos-latest
@@ -110,15 +116,21 @@ jobs:
           mv lychee dmg/
           hdiutil create -fs HFS+ -srcfolder dmg -volname lychee lychee.dmg
 
-      - name: Upload binary
-        uses: actions/upload-release-asset@v1
+      - name: Upload assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          asset_name: lychee-${{needs.prepare.outputs.tag_name}}-macos-x86_64.dmg
-          asset_path: target/release/lychee.dmg
-          upload_url: ${{needs.prepare.outputs.upload_url}}
-          asset_content_type: application/octet-stream
+        run: |
+          gh release upload ${{needs.prepare.outputs.tag_name}} target/release/lychee.dmg#lychee-${{needs.prepare.outputs.tag_name}}-macos-x86_64.dmg --clobber
+
+      # - name: Upload binary
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     asset_name: lychee-${{needs.prepare.outputs.tag_name}}-macos-x86_64.dmg
+      #     asset_path: target/release/lychee.dmg
+      #     upload_url: ${{needs.prepare.outputs.upload_url}}
+      #     asset_content_type: application/octet-stream
 
   windows:
     runs-on: windows-latest
@@ -144,12 +156,18 @@ jobs:
           args: --release
           use-cross: true
 
-      - name: Upload binary
-        uses: actions/upload-release-asset@v1
+      - name: Upload assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          asset_name: lychee-${{needs.prepare.outputs.tag_name}}-windows-x86_64.exe
-          asset_path: target/release/lychee.exe
-          upload_url: ${{needs.prepare.outputs.upload_url}}
-          asset_content_type: application/octet-stream
+        run: |
+          gh release upload ${{needs.prepare.outputs.tag_name}} target/release/lychee.exe#lychee-${{needs.prepare.outputs.tag_name}}-windows-x86_64.exe --clobber
+
+      # - name: Upload binary
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     asset_name: lychee-${{needs.prepare.outputs.tag_name}}-windows-x86_64.exe
+      #     asset_path: target/release/lychee.exe
+      #     upload_url: ${{needs.prepare.outputs.upload_url}}
+      #     asset_content_type: application/octet-stream
