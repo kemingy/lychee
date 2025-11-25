@@ -35,7 +35,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: install OpenSSL
-        run: sudo apt update && sudo apt install -y libssl-dev pkg-config
+        run: |
+          sudo apt update && sudo apt install -y libssl-dev pkg-config
+          pkg-config --libs --cflags openssl
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -65,7 +67,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: install OpenSSL
-        run: sudo apt update && sudo apt install -y libssl-dev pkg-config
+        run: |
+          sudo apt update && sudo apt install -y libssl-dev pkg-config
+          pkg-config --libs --cflags openssl
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -96,9 +100,9 @@ jobs:
           VCPKG_ROOT: ${{ github.workspace }}\vcpkg
         run: |
           git clone https://github.com/microsoft/vcpkg.git $env:VCPKG_ROOT
-          $env:VCPKG_ROOT\bootstrap-vcpkg.bat
-          echo "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Append
-          vcpkg install openssl:x64-windows-static-md
+          & "$env:VCPKG_ROOT\bootstrap-vcpkg.bat"
+          echo "VCPKG_ROOT=$env:VCPKG_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Append
+          & "$env:VCPKG_ROOT\vcpkg" install openssl:x64-windows-static-md
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
